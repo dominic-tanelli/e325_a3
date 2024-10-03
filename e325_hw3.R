@@ -6,12 +6,12 @@
 # Homework 3: Intro to data visualization
 # In-Class Prompts
 # Starter Code
-# install.packages(c("dplyr", "lubridate", "ggplot2", "gridExtra"))
+# install.packages(c("dplyr", "lubridate", "ggplot2", "gridExtra", "readxl"))
 library(dplyr)
 library(lubridate)
 library(ggplot2)
 library(gridExtra)
-setwd("~/Downloads/activity03")
+library(readxl)
 datCO2 <- read.csv("~/Downloads/activity03/annual-co-emissions-by-region.csv")
 colnames(datCO2)[4] <- "CO2"
 climate_change <- read.csv("~/Downloads/activity03/climate-change.csv")
@@ -25,7 +25,7 @@ SouthernH <- climate_change[climate_change$Entity == "Southern Hemisphere",]
 # Base R
 cat("\nPrompt 1 Answer (Base R): \n")
 plot(NorthernH$date, NorthernH$temperature_anomaly, type = "b", pch = 19, ylab = "Temperature Anomaly", 
-     xlab = "Year", yaxt = "n", col = "red", main = "Temperature Anomaly by Hemisphere From 1880-2021")
+     xlab = "Year", yaxt = "n", col = "red", main = "Temperature Anomaly by Hemisphere From 1880-2021 (Base R)")
 axis(2, seq(0,6000000000, by=2000000000), seq(0,6, by = 2), las=2)
 points(SouthernH$date, SouthernH$temperature_anomaly, type = "b", pch = 19, col= "blue")
 legend("topleft", c("Northern Hemisphere", "Southern Hemisphere"), col=c("red", "blue"), pch=19, bty= "n")
@@ -35,7 +35,7 @@ cat("\nPrompt 1 Answer (ggplot): \n")
 NS_H <- rbind(NorthernH, SouthernH) # Northern and Southern Hemisphere Combined Data Frame
 ggplot(data = NS_H, aes(x = date, y = temperature_anomaly, color = Entity ) ) + geom_point() + geom_line() + 
   labs(x = "Year", y = "Temperature Anomaly") + 
-  ggtitle("Temperature Anomaly by Hemisphere From 1880-2021") + theme_classic() + 
+  ggtitle("Temperature Anomaly by Hemisphere From 1880-2021 (ggplot)") + theme_classic() + 
   scale_color_manual(values = c("#7FB3D555","#34495E55")) 
 
 # Prompt 2 + Optional Challenge
@@ -67,10 +67,17 @@ world_climate_change_plot <- ggplot(data = world_climate_change, aes(x = date, y
   geom_line(color = "orange") + geom_point(color = "orange") + labs(x = "Year", y = "Temperature Anomaly ") + 
   ggtitle("Global Air Temperature Anomalies") + theme_classic()
 
-# Arrange the two plots side by side
+cat("\nQuestion 2 Answer: \n")
 grid.arrange(world_CO2_plot, world_climate_change_plot, ncol = 2)
 
 # Question 3
+energy <- read.csv("~/Downloads/per-capita-energy-use.csv")
+colnames(energy)[4] <- "Energy_Consumption"
+world_energy <- energy[energy$Entity == "World", ]
+cat("\nQuestion 3 Answer: \n")
+ggplot(data = world_energy, aes(x = Year, y = Energy_Consumption)) + geom_line(color = "purple") + 
+  geom_point(color = "purple") + labs(x = "Year", y = "Energy Consumption per capita (kWh)") + 
+  ggtitle("Global Energy Consumption per capita (kWh) From 1965-2023") + theme_classic()
 
 # Question 4
 cat("\nQuestion 4 Answer: See Word PDF \n")
